@@ -26,6 +26,34 @@ function initSquares() {
 		}
 	}
 }
+function isSolved() {
+	for (var f = 0; f < 6; f++) {
+		for (var i = 0; i < 3; i++) {
+			for (var j = 0; j < 3; j++) {
+				if (squares[s(f,i,j)] != f) { return false; }
+			}
+		}
+	}
+	return true;
+}
+var solving = false
+async function demoSpin() {
+	if (solving) {
+		return
+	}
+	solving = true
+	count = 0
+	seq = [[1, false], [2, false], [3, true], [4, true], [0, false]]
+	for (pair of seq) {
+		++count
+		document.getElementById("count").innerHTML = "Moves: " + count
+		await animateRotation(pair[0], pair[1], Date.now());
+		await new Promise(resolve => {
+			setTimeout(resolve, 1000);
+		});
+	}
+	solving = false
+}
 // brute force gang
 function rotateSquares(f, cw) {
 	var face_cycle = [s(f,0,0), s(f,0,1), s(f,0,2), s(f,1,2), s(f,2,2), s(f,2,1), s(f,2,0), s(f,1,0)]
@@ -49,6 +77,14 @@ function rotateSquares(f, cw) {
 	} else {
 		apply_move(face_cycle.reverse(), 2)
 		apply_move(outer_cycle.reverse(), 3)
+	}
+	if (!solving) {
+		document.getElementById("count").innerHTML = "Moves: 0"
+	}
+	if (isSolved()) {
+		document.getElementById("solved").innerHTML = "Solved!"
+	} else {
+		document.getElementById("solved").innerHTML = ""
 	}
 	console.log("rotated " + f + ". cube: \n" + " " +
 		"     " + " " + squares[s(4,0,0)] + " " + squares[s(4,0,1)] + " " + squares[s(4,0,2)] + " " + "\n" + " " +
