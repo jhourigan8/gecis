@@ -36,23 +36,46 @@ function isSolved() {
 	}
 	return true;
 }
-var solving = false
-async function demoSpin() {
-	if (solving) {
-		return
+function animateSequence(seq, count) {
+	console.log(seq)
+	++count
+	document.getElementById("count").innerHTML = "Moves: " + count
+	pair = seq.shift()
+	animateRotation(pair[0], pair[1], Date.now())
+	if (pair.length == 4) {
+		animateRotation(pair[2], pair[3], Date.now())
 	}
-	solving = true
-	count = 0
-	seq = [[1, false], [2, false], [3, true], [4, true], [0, false]]
-	for (pair of seq) {
-		++count
-		document.getElementById("count").innerHTML = "Moves: " + count
-		await animateRotation(pair[0], pair[1], Date.now());
-		await new Promise(resolve => {
+	if (seq.length == 0) { 
+		solving = false 
+	} else {
+		new Promise(resolve => {
 			setTimeout(resolve, 1000);
-		});
+		}).then((res) => animateSequence(seq, count))
 	}
-	solving = false
+}
+
+var solving = false
+async function solveCube() {
+	document.getElementById("solved").innerHTML = "Solving..."
+	$.ajax({
+		type: "POST",
+		url: "http://localhost:5000/solve",
+		data: { cube: JSON.stringify(squares) },
+	}).then((data) => {
+		document.getElementById("solved").innerHTML = "Solution:"
+		if (solving) { return }
+		solving = true
+		console.log(data)
+		if (data.response.length == 0) {
+			document.getElementById("solved").innerHTML = "Solved!"
+			return
+		}
+		animateSequence(data.response, 0)
+	}, (data) => { // err same jank af lol
+		if (solving) { return }
+		console.log(JSON.parse(data.responseText))
+		animateSequence(JSON.parse(data.responseText).response, 0)
+	})
 }
 // brute force gang
 function rotateSquares(f, cw) {
