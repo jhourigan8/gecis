@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask import make_response
 app = Flask(__name__)
-import pennCube
+import pennCube, pennCubeSat
 import json
 
 # maybe wrong
@@ -35,14 +35,20 @@ py_to_js_squares = [
     45,46,47,48,49,50,51,52,53,54
 ]
 
-def solve(squares):
+def solve(squares, alg):
     i = 3
     while True:
-        testSolver = pennCube.cubeSolver(squares, i)
         try:
-            soln = testSolver.solve()
-            print(soln)
-            return soln
+            if alg == 'MIP':
+                testSolver = pennCube.cubeSolver(squares, i)
+                soln = testSolver.solve()
+                print(soln)
+                return soln
+            else:
+                testSolver = pennCubeSat.cubeSolver(squares, i)
+                soln = testSolver.solve()
+                print(soln)
+                return soln
         except ValueError:
             i += 1
 
@@ -51,10 +57,12 @@ def solve_route():
    message = None
    if request.method == 'POST':
         js_data = json.loads(request.form['cube'])
+        js_alg = json.loads(request.form['alg'])
         print(js_data)
+        print(js_alg)
         data = [int(js_data[py_to_js_squares[i]]) + 1 for i in range(54)]
         print(data)
-        result = str([py_to_js_move[i[1]] for i in solve(data)]).replace('T', 't').replace('F', 'f')
+        result = str([py_to_js_move[i[1]] for i in solve(data, js_alg)]).replace('T', 't').replace('F', 'f')
         print(result)
 
         resp = make_response('{"response": '+result+'}')

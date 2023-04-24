@@ -55,15 +55,15 @@ function animateSequence(seq, count) {
 }
 
 var solving = false
-async function solveCube() {
+async function solveCube(alg) {
 	document.getElementById("solved").innerHTML = "Solving..."
 	$.ajax({
 		type: "POST",
 		url: "http://localhost:5000/solve",
-		data: { cube: JSON.stringify(squares) },
+		data: { cube: JSON.stringify(squares), alg: JSON.stringify(alg) },
 	}).then((data) => {
-		document.getElementById("solved").innerHTML = "Solution:"
 		if (solving) { return }
+		document.getElementById("solved").innerHTML = "Solution:"
 		solving = true
 		console.log(data)
 		if (data.response.length == 0) {
