@@ -36,10 +36,15 @@ py_to_js_squares = [
 ]
 
 def solve(squares):
-    testSolver = pennCube.cubeSolver(squares, 3)
-    soln = testSolver.solve()
-    print(soln)
-    return soln
+    i = 3
+    while True:
+        testSolver = pennCube.cubeSolver(squares, i)
+        try:
+            soln = testSolver.solve()
+            print(soln)
+            return soln
+        except ValueError:
+            i += 1
 
 @app.route('/solve', methods=['GET', 'POST'])
 def solve_route():

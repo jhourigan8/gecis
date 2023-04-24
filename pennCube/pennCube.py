@@ -127,6 +127,7 @@ class cubeSolver:
         for t in range(maxMoves - 1):
             for k, i, j in gecis:
                 #add constraint
+                #TODO: does this add a bunch of repeat constraints
                 innerSum = 0
                 for l, j, n in gecis:
                     if l != k and i == j:
