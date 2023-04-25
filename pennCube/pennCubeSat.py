@@ -26,10 +26,9 @@ import time
 
 # %%
 class cubeSolver:
-    def __init__(self, scramble: List[int], maxMoves, goal):
+    def __init__(self, scramble: List[int], maxMoves):
         self.maxMoves = maxMoves
         self.scramble: List[int] = scramble
-        self.goal = goal
 
     def x(self, c: int, i: int, t: int) -> int:
         # color, square, time
@@ -133,19 +132,13 @@ class cubeSolver:
     def setFinalPosition(self):
         x = self.x
         maxMoves = self.maxMoves
-        goal = self.goal
 
-        faces = []
-        if goal == 'Full':
-            faces = [[0, 1, 2, 3, 4, 5, 6, 7, 8], 
-                [9, 10, 11, 21, 22, 23, 33, 34, 35], 
-                [12, 13, 14, 24, 25, 26, 36, 37, 38], 
-                [15, 16, 17, 27, 28, 29, 39, 40, 41],
-                [18, 19, 20, 30, 31, 32, 42, 43, 44],
-                [45, 46, 47, 48, 49, 50, 51, 52, 53]]
-        else:
-            print("one face solve")
-            faces = [[12, 13, 14, 24, 25, 26, 36, 37, 38]]
+        faces = [[0, 1, 2, 3, 4, 5, 6, 7, 8], 
+            [9, 10, 11, 21, 22, 23, 33, 34, 35], 
+            [12, 13, 14, 24, 25, 26, 36, 37, 38], 
+            [15, 16, 17, 27, 28, 29, 39, 40, 41],
+            [18, 19, 20, 30, 31, 32, 42, 43, 44],
+            [45, 46, 47, 48, 49, 50, 51, 52, 53]]
         
         constraints = self.constraints
         for f in faces:
@@ -372,15 +365,3 @@ twelveMove = [2, 3, 6, 5, 1, 2, 3, 4,
 1, 2, 2, 5, 1, 3, 2, 5, 4, 5, 4, 5, 
 1, 6, 6, 6, 3, 6, 5, 4, 4, 4, 3, 2, 
 5, 4, 3, 1, 4, 6, 1, 4, 6, 1]
-
-arr = [1, 1, 4, 1, 5, 4, 4, 6, 3, 3, 3, 6, 1, 3, 5, 1, 5, 2, 6, 6, 6, 4, 1, 2, 6, 3, 3, 2, 2, 5, 2, 4, 2, 1, 6, 2, 3, 3, 3, 2, 1, 5, 4, 1, 5, 5, 5, 6, 4, 6, 4, 4, 5, 2]
-
-testSolver = cubeSolver(sevenMove, 5, "Face")
-for i in [12, 13, 14, 24, 25, 26, 36, 37, 38]:
-    print(arr[i])
-
-t0 = time.time()
-solution = testSolver.solve()
-print(solution)
-print(f'Solve took {time.time() - t0} seconds')
-outputPretty(solution)

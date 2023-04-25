@@ -27,18 +27,10 @@ function initSquares() {
 	}
 }
 function isSolved() {
-	if (document.getElementById('Full').checked) {
-		for (var f = 0; f < 6; f++) {
-			for (var i = 0; i < 3; i++) {
-				for (var j = 0; j < 3; j++) {
-					if (squares[s(f,i,j)] != f) { return false; }
-				}
-			}
-		}
-	} else {
+	for (var f = 0; f < 6; f++) {
 		for (var i = 0; i < 3; i++) {
 			for (var j = 0; j < 3; j++) {
-				if (squares[s(0,i,j)] != 0) { return false; }
+				if (squares[s(f,i,j)] != f) { return false; }
 			}
 		}
 	}
@@ -71,12 +63,10 @@ async function solveCube() {
 	intid = setInterval(myTimer, 10);
 	alg = "MIP"
 	if (document.getElementById('SAT').checked) { alg = "SAT" }
-	goal = "Full"
-	if (document.getElementById('Cross').checked) { goal = "Cross" }
 	$.ajax({
 		type: "POST",
 		url: "http://localhost:5000/solve",
-		data: { cube: JSON.stringify(squares), alg: JSON.stringify(alg), goal: JSON.stringify(goal) },
+		data: { cube: JSON.stringify(squares), alg: JSON.stringify(alg) },
 	}).then((data) => {
 		clearInterval(intid);
 		document.getElementById("solved").innerHTML = "Solution:"
