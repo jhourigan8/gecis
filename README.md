@@ -56,6 +56,20 @@ calls for the other constraints.)
 If you wish to see the cube in action recomend using the webapp to interface with it, since the code is a bit complex and not fully setup for the 
 user to easily interface with it, without knowing how it works.
 
+### Ways We Optimized the Solver
+Through the proccess of developing the solver we did some steps to try to make it faster, since intitialy it took an unresonable amount of time even on easy solves.
+
+**Switched Solvers:**
+The first thing we did was swap from the `Solver.CBC_MIXED_INTEGER_PROGRAMMING` to the `Solver.SAT_INTEGER_PROGRAMMING`. This new solver requires only bool vars and finite bools vars which matches our situation. This led to speed up from 10's of miniutes to 10's of seconds. We think this is due to the fact that the more complex MIP solver is looking at a much larger search space compared to the SAT version.
+
+**Removed Minimization Contraint:**
+One thing we needed was a maxMove contraint on the solver to give a finite number of varaibles to create before calling the solve method. We initially set this to a large number and then just let it run to minimize the number of moves. However we found that it creates a large number of unesseasry varaibales so intead we got rid of the minimization constraint. Then we incremented over the maxMoves values 1, 2, ... until it finds a fesible solution. This decreased runtimes from around 16.0 seconds for a 7 move solve to 1.8 seconds for a 7 move solve. 
+
+**Different Objectives:**
+We also tried using different objectives, like just solving one face, or solving the cross on one side. This lead to some speed up in some cases however the main time contraint was due to the actuall minimization value. Since solving one side can take >12 moves this does not lead to much speed up in complex scrambles.
+
+**Change Encodings:**
+Lastly we decided to change encodings from MIP to SAT. We thought this might speed things up since the MIP solver might be looking at unessesary search spaces while SAT might be able to ignore some cases. This lead to not much of a different ###(Jack write what it did)
 
 
 
