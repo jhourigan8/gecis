@@ -27,7 +27,16 @@ The flask server translates from our javascript representation to our python rep
 It then returns the results to the user.
 To start the flask server run `flask run` from the `pennCube` directory in bash.
 
-## pennCube
+
+
+
+## Solver
+We decided to implement a solver using both MIP and SAT to experimentally compare the two.
+
+As a starting point for our solvers we read the following [paper](http://www.m-hikari.com/imf-password2009/45-48-2009/aksopIMF45-48-2009-2.pdf). That described a method to implement a solver using Integer Programing. The main ideas are that we have variables that define the color of each sub cube in
+each step in the soltuion, aswell a varaiables that define which move is done at each step in the solution. Then we have contraints making sure the colors match depending on the moves done, and that only move can be done at each time. Initially we had a minimization contraint over the number of moves made, however we found it to be faster to have a max move number, and re run the solver incrementing that.
+
+#### MIP Solver
 The main file to open for testing the MIP solver is the `pennCube.ipynb`. If opening run the first 3 code cells, 
 which are the imports, solver, and testing helpers. The next cell is a tool used to take a real-life scramble and get the array representation for testing
 and thus can be ignored. Then follows some test arrays. Then comes the next section in which you have the ability to run a test as it would run on the front end. 
@@ -41,13 +50,6 @@ calls for the other constraints.)
 
 If you wish to see the cube in action recomend using the webapp to interface with it, since the code is a bit complex and not fully setup for the 
 user to easily interface with it, without knowing how it works.
-
-
-## Solver
-We decided to implement a solver using both MIP and SAT to experimentally compare the two.
-
-As a starting point for our solver we read [GECIS PAPER].
-[TALK ABOUT MIP].
 
 
 
