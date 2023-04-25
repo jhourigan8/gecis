@@ -36,7 +36,7 @@ py_to_js_squares = [
 ]
 
 def solve(squares, alg):
-    i = 3
+    i = 1
     while True:
         try:
             if alg == 'MIP':

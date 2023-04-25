@@ -179,9 +179,6 @@ class cubeSolver:
             (17,43,48), (17,48,15), (17,51,27), (17,54,39), (17,16,18),
             (17,17,30), (17,18,42), (17,28,17), (17,30,41), (17,40,16),
             (17,41,28), (17,42,40)]
-        
-        # ban middle spins
-        # self.gecis = [(k,i,j) for (k,i,j) in self.gecis if k not in [2,3,8,9,14,15]]
 
         self.constraints = []
         constraints = self.constraints
@@ -300,16 +297,7 @@ def outputPretty(solutionTurns):
     for t, i in solutionTurns:
         print(f'Turn {t + 1} is {moveToFaceTurn(i + 1)}')
 
-
-
-
-
-
-# %% [markdown]
-# ##### Testing
-
-# %%
-#a bunch of test positions
+# Some manual testing code.
 
 oneTurn = [
     2, 2, 2, 
@@ -365,3 +353,10 @@ twelveMove = [2, 3, 6, 5, 1, 2, 3, 4,
 1, 2, 2, 5, 1, 3, 2, 5, 4, 5, 4, 5, 
 1, 6, 6, 6, 3, 6, 5, 4, 4, 4, 3, 2, 
 5, 4, 3, 1, 4, 6, 1, 4, 6, 1]
+
+#testSolver = cubeSolver(sevenMove, 5)
+#t0 = time.time()
+#solution = testSolver.solve()
+#print(solution)
+#print(f'Solve took {time.time() - t0} seconds')
+#outputPretty(solution)
