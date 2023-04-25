@@ -27,16 +27,25 @@ function initSquares() {
 	}
 }
 function isSolved() {
-	for (var f = 0; f < 6; f++) {
+	if (document.getElementById('Full').checked) {
+		for (var f = 0; f < 6; f++) {
+			for (var i = 0; i < 3; i++) {
+				for (var j = 0; j < 3; j++) {
+					if (squares[s(f,i,j)] != f) { return false; }
+				}
+			}
+		}
+	} else {
 		for (var i = 0; i < 3; i++) {
 			for (var j = 0; j < 3; j++) {
-				if (squares[s(f,i,j)] != f) { return false; }
+				if (squares[s(0,i,j)] != 0) { return false; }
 			}
 		}
 	}
 	return true;
 }
 function animateSequence(seq, count) {
+	if (seq.length == 0) { return }
 	console.log(seq)
 	++count
 	document.getElementById("count").innerHTML = "Moves: " + count
@@ -44,27 +53,33 @@ function animateSequence(seq, count) {
 	animateRotation(pair[0], pair[1], Date.now())
 	if (pair.length == 4) {
 		animateRotation(pair[2], pair[3], Date.now())
-	}
-	if (seq.length == 0) { 
-		solving = false 
 	} else {
 		new Promise(resolve => {
 			setTimeout(resolve, 1000);
 		}).then((res) => animateSequence(seq, count))
 	}
 }
-
-var solving = false
-async function solveCube(alg) {
+var time;
+var intid;
+function myTimer() {
+	document.getElementById("time").innerHTML = (Math.floor((Date.now() - time) / 100) / 10) + "s";
+}
+async function solveCube() {
 	document.getElementById("solved").innerHTML = "Solving..."
+	document.getElementById("count").innerHTML = "Moves: 0"
+	time = Date.now()
+	intid = setInterval(myTimer, 10);
+	alg = "MIP"
+	if (document.getElementById('SAT').checked) { alg = "SAT" }
+	goal = "Full"
+	if (document.getElementById('Cross').checked) { goal = "Cross" }
 	$.ajax({
 		type: "POST",
 		url: "http://localhost:5000/solve",
-		data: { cube: JSON.stringify(squares), alg: JSON.stringify(alg) },
+		data: { cube: JSON.stringify(squares), alg: JSON.stringify(alg), goal: JSON.stringify(goal) },
 	}).then((data) => {
-		if (solving) { return }
+		clearInterval(intid);
 		document.getElementById("solved").innerHTML = "Solution:"
-		solving = true
 		console.log(data)
 		if (data.response.length == 0) {
 			document.getElementById("solved").innerHTML = "Solved!"
@@ -72,7 +87,6 @@ async function solveCube(alg) {
 		}
 		animateSequence(data.response, 0)
 	}, (data) => { // err same jank af lol
-		if (solving) { return }
 		console.log(JSON.parse(data.responseText))
 		animateSequence(JSON.parse(data.responseText).response, 0)
 	})
@@ -101,13 +115,8 @@ function rotateSquares(f, cw) {
 		apply_move(face_cycle.reverse(), 2)
 		apply_move(outer_cycle.reverse(), 3)
 	}
-	if (!solving) {
-		document.getElementById("count").innerHTML = "Moves: 0"
-	}
 	if (isSolved()) {
 		document.getElementById("solved").innerHTML = "Solved!"
-	} else {
-		document.getElementById("solved").innerHTML = ""
 	}
 	console.log("rotated " + f + ". cube: \n" + " " +
 		"     " + " " + squares[s(4,0,0)] + " " + squares[s(4,0,1)] + " " + squares[s(4,0,2)] + " " + "\n" + " " +

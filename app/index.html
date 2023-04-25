@@ -227,10 +227,20 @@
     <div class="authors" style="position: initial">Made by Gabe Smith + Jack Hourigan</div>
   </div>
   <div class="solve">
-    <button class="button" style="position: initial" onclick="solveCube('SAT')">Solve with SAT</button>
-    <button class="button" style="position: initial" onclick="solveCube('MIP')">Solve with MIP</button>
+    <button class="button" style="position: initial" onclick="solveCube()">Solve</button>
     <div class="count" id="count" style="position: initial">Moves: 0</div>
-    <div class="solved" id="solved" style="position: initial"></div>
+    <div class="solved" id="solved" style="position: initial">Solved!</div>
+    <div class="solved" id="time" style="position: initial">0s</div>
+    <h2 class="form">Solver:</h2>
+    <form>
+      <label><input class="form" type="radio" name="1" id="MIP" checked>MIP</label>
+      <label><input class="form" type="radio" name="1" id="SAT">SAT</label>
+    </form>
+    <h2 class="form">Goal:</h2>
+    <form>
+      <label><input class="form" type="radio" name="2" id="Full" checked>Full</label>
+      <label><input class="form" type="radio" name="2" id="Cross" disabled>Cross</label>
+    </form>
   </div>
 </div>
 <div id="guide">

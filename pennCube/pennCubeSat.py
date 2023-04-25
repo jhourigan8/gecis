@@ -25,12 +25,11 @@ import time
 # ##### Solver
 
 # %%
-
-
 class cubeSolver:
-    def __init__(self, scramble: List[int], maxMoves):
+    def __init__(self, scramble: List[int], maxMoves, goal):
         self.maxMoves = maxMoves
         self.scramble: List[int] = scramble
+        self.goal = goal
 
     def x(self, c: int, i: int, t: int) -> int:
         # color, square, time
@@ -88,6 +87,15 @@ class cubeSolver:
                 for l in range(k+1, 19):
                     constraints.append([-y(k-1, t), -y(l-1, t)])
 
+    def banMiddleSpins(self):
+        y = self.y
+        maxMoves = self.maxMoves
+
+        constraints = self.constraints
+        for t in range(maxMoves - 1):
+            for k in [2,3,8,9,14,15]:
+                constraints.append([-y(k, t)])
+
     def atMostOneColorPerTime(self):
         x = self.x
         maxMoves = self.maxMoves
@@ -98,14 +106,6 @@ class cubeSolver:
                 for c in range(6):
                     for d in range(c+1, 6):
                         constraints.append([-x(c, i, t), -x(d, i, t)])
-
-    def atLeastOneMovePerTime(self):
-        y = self.y
-        maxMoves = self.maxMoves
-
-        constraints = self.constraints
-        for t in range(maxMoves - 1):
-            constraints.append([y(k, t) for k in range(18)])
 
     def atLeastOneColorPerTime(self):
         x = self.x
@@ -133,18 +133,25 @@ class cubeSolver:
     def setFinalPosition(self):
         x = self.x
         maxMoves = self.maxMoves
-        faces = [[0, 1, 2, 3, 4, 5, 6, 7, 8], 
-            [9, 10, 11, 21, 22, 23, 33, 34, 35], 
-            [12, 13, 14, 24, 25, 26, 36, 37, 38], 
-            [15, 16, 17, 27, 28, 29, 39, 40, 41],
-            [18, 19, 20, 30, 31, 32, 42, 43, 44],
-            [45, 46, 47, 48, 49, 50, 51, 52, 53]]
+        goal = self.goal
+
+        faces = []
+        if goal == 'Full':
+            faces = [[0, 1, 2, 3, 4, 5, 6, 7, 8], 
+                [9, 10, 11, 21, 22, 23, 33, 34, 35], 
+                [12, 13, 14, 24, 25, 26, 36, 37, 38], 
+                [15, 16, 17, 27, 28, 29, 39, 40, 41],
+                [18, 19, 20, 30, 31, 32, 42, 43, 44],
+                [45, 46, 47, 48, 49, 50, 51, 52, 53]]
+        else:
+            print("one face solve")
+            faces = [[12, 13, 14, 24, 25, 26, 36, 37, 38]]
         
         constraints = self.constraints
         for f in faces:
             for c in range(6):
-                for p in range(9):
-                    for q in range(p+1, 9):
+                for p in range(len(f)):
+                    for q in range(p+1, len(f)):
                         constraints.append([x(c, f[p], maxMoves - 1), -x(c, f[q], maxMoves - 1)])
                         constraints.append([-x(c, f[p], maxMoves - 1), x(c, f[q], maxMoves - 1)])
         
@@ -179,13 +186,16 @@ class cubeSolver:
             (17,43,48), (17,48,15), (17,51,27), (17,54,39), (17,16,18),
             (17,17,30), (17,18,42), (17,28,17), (17,30,41), (17,40,16),
             (17,41,28), (17,42,40)]
+        
+        # ban middle spins
+        # self.gecis = [(k,i,j) for (k,i,j) in self.gecis if k not in [2,3,8,9,14,15]]
 
         self.constraints = []
         constraints = self.constraints
 
+        self.banMiddleSpins()
         self.atMostOneMovePerTime()
         self.atMostOneColorPerTime()
-        self.atLeastOneMovePerTime()
         self.atLeastOneColorPerTime()
         self.gecisTurnContraints()
         self.gecisNoTurnContraints()
@@ -203,7 +213,8 @@ class cubeSolver:
         if ass == "UNSAT":
             raise ValueError('Modeling error!')
         else:
-            ass = [((x-1) // 18, (x % 18)) for x in ass if x > 0 and x <= 18*maxMoves]   
+            print(len([x for x in ass if x > 0]))
+            ass = [((x-1) // 18, ((x-1+18) % 18)) for x in ass if x > 0 and x <= 18*maxMoves]
         return ass
 
 
@@ -362,20 +373,14 @@ twelveMove = [2, 3, 6, 5, 1, 2, 3, 4,
 1, 6, 6, 6, 3, 6, 5, 4, 4, 4, 3, 2, 
 5, 4, 3, 1, 4, 6, 1, 4, 6, 1]
 
-# %%
-#basic cube solver
+arr = [1, 1, 4, 1, 5, 4, 4, 6, 3, 3, 3, 6, 1, 3, 5, 1, 5, 2, 6, 6, 6, 4, 1, 2, 6, 3, 3, 2, 2, 5, 2, 4, 2, 1, 6, 2, 3, 3, 3, 2, 1, 5, 4, 1, 5, 5, 5, 6, 4, 6, 4, 4, 5, 2]
 
-solvedPosition = [
-    1, 1, 1, 
-    1, 1, 1, 
-    1, 1, 1,
-2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 
-2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5,
-2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 
-    6, 6, 6,  
-    6, 6, 6, 
-    6, 6, 6] 
+testSolver = cubeSolver(sevenMove, 5, "Face")
+for i in [12, 13, 14, 24, 25, 26, 36, 37, 38]:
+    print(arr[i])
 
-
-
-
+t0 = time.time()
+solution = testSolver.solve()
+print(solution)
+print(f'Solve took {time.time() - t0} seconds')
+outputPretty(solution)
