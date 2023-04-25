@@ -14,7 +14,7 @@ Our PennCube project consists of an app and a solver.
 - `pennCube/pennCubeSat.py`: SAT solver code exported from Jupyter notebook.
 
 ## Usage
-To run the web app, run `node app` in the `app` directory and `flask run` in the `pennCube` directory.
+To run the web app, run `node app` in the `app` directory and run `flask run` in the `pennCube` directory.
 The app will then be live at `http://localhost:8000`.
 At the bottom of each Jupyter notebook we have manual test suites for testing outside of the web app.
 
