@@ -1,6 +1,15 @@
 # Overview
 Our PennCube project consists of an app and a solver.
-TODO: explain each file
+
+## Files
+- `app/index.html`: HTML code for the web app.
+- `app/style.css`: CSS code for the web app.
+- `app/script.js`: Client side JS code for the web app.
+- `pennCube/app.py`: Server side Python code to interface between app and solver.
+- `pennCube/pennCube.ipynb`: MIP PennCube code with test cases.
+- `pennCube/pennCubeSat.ipynb`: SAT PennCube code with test cases.
+- `pennCube/pennCube.py`: MIP solver code exported from Jupyter notebook.
+- `pennCube/pennCubeSat.py`: SAT solver code exported from Jupyter notebook.
 
 ## App
 Our app shows a realistic 3D-rendered Rubik's cube which can be controlled via the mouse.
