@@ -37,10 +37,13 @@ As a starting point for our solvers we read the following [paper](http://www.m-h
 each step in the soltuion, aswell a varaiables that define which move is done at each step in the solution. Then we have contraints making sure the colors match depending on the moves done, and that only move can be done at each time. Initially we had a minimization contraint over the number of moves made, however we found it to be faster to have a max move number, and re run the solver incrementing that.
 
 #### MIP Solver
-The main file to open for testing the MIP solver is the `pennCube.ipynb`. If opening run the first 3 code cells, 
-which are the imports, solver, and testing helpers. The next cell is a tool used to take a real-life scramble and get the array representation for testing
-and thus can be ignored. Then follows some test arrays. Then comes the next section in which you have the ability to run a test as it would run on the front end. 
-Replace the input array with any failing test case to see the output of the solver. 
+The main file to open for testing the MIP solver is the `pennCube.ipynb`. If opening run the first 4 code cells, 
+which are the imports, two solver sections, and testing helpers. The next secton contain actual test cases which you can run to test the features of our solver. Replace the input array of the first test case with any failing test case to see the output of the solver. Further more our solver has 5 different parameters. 
+- Scramble: The starting position of the solver
+- debugIn: When true prints runtimes and other information
+- oneSideIn: Number from 1-6 that says which one side to solve. If none solves normally
+- crossIn: Number from 1-6 that says which cross to solver. If non solves normally
+- timeLimit: Time limit for the solver
 
 Bellow all of this was an all in one tester that allows you to take a real-life scramble and input it to be solved. This was helpful for debugging however 
 to use one must fully understand our numbering of the cubes as described in the diagrams at the top of the file. 
