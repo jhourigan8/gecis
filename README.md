@@ -1,6 +1,20 @@
 # Overview
 Our PennCube project consists of an app and a solver.
-TODO: explain each file
+
+## Files
+- `app/index.html`: HTML code for the web app.
+- `app/style.css`: CSS code for the web app.
+- `app/script.js`: Client side JS code for the web app.
+- `pennCube/app.py`: Server side Python code to interface between app and solver.
+- `pennCube/pennCube.ipynb`: MIP PennCube code with test cases.
+- `pennCube/pennCubeSat.ipynb`: SAT PennCube code with test cases.
+- `pennCube/pennCube.py`: MIP solver code exported from Jupyter notebook.
+- `pennCube/pennCubeSat.py`: SAT solver code exported from Jupyter notebook.
+
+## Usage
+TODO: talk about manual testing in jupyter notebooks
+To run the web app, run `node app` in the `app` directory and `flask run` in the `pennCube` directory.
+The app will then be live at `http://localhost:8000`.
 
 ## App
 Our app shows a realistic 3D-rendered Rubik's cube which can be controlled via the mouse.
@@ -9,17 +23,12 @@ The user can select either the `MIP` or `SAT` solver using the buttons on the bo
 While the solver is running a timer shows the amount of time elapsed.
 Once an optimal solution has been found the app animates the solution on the cube.
 
-The frontend for our app consists of `app/index.html`, `app/style.css`, and `app/app.js`.
 The original Rubik's cube animation code was sourced from [https://codepen.io/jhourigan8/pen/LYgpLzj].
-Most of the work here dealt with keeping track of the cube state as the user moved the cube.
-To start the frontend run `node app` from the `app` directory in bash.
-To communicate with the solver our app sends a request to a flask server with code located in `pennCube/app.py`.
-The flask server translates from our javascript representation to our python representation and calls the solvers.
+The rest of the frontend is original work.
+Most of the work on the frontend dealt with keeping track of the cube state as the user moves the cube.
+To communicate with the solver our app sends a request to a flask server.
+The flask server translates from our javascript representation to our python representation and calls one of the solvers.
 It then returns the results to the user.
-To start the flask server run `flask run` from the `pennCube` directory in bash.
-
-
-
 
 ## Solver
 We decided to implement a solver using both MIP and SAT to experimentally compare the two.
