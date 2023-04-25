@@ -56,8 +56,6 @@ def solve(squares, alg):
             except ValueError:
                 i += 1
         
-        
-
 @app.route('/solve', methods=['GET', 'POST'])
 def solve_route():
    message = None
