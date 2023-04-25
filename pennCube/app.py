@@ -37,20 +37,26 @@ py_to_js_squares = [
 
 def solve(squares, alg):
     i = 1
-    while True:
-        try:
-            if alg == 'MIP':
-                testSolver = pennCube.cubeSolver(squares, i)
-                soln = testSolver.solve()
-                print(soln)
-                return soln
-            else:
+    if alg == 'MIP':
+        while True:
+            testSolver = pennCube.cubeSolver(squares, i)
+            soln = testSolver.solve()
+            if soln is None:
+                i += 1
+                continue
+            print(soln)
+            return soln
+    else:
+         while True:
+            try:
                 testSolver = pennCubeSat.cubeSolver(squares, i)
                 soln = testSolver.solve()
                 print(soln)
                 return soln
-        except ValueError:
-            i += 1
+            except ValueError:
+                i += 1
+        
+        
 
 @app.route('/solve', methods=['GET', 'POST'])
 def solve_route():
