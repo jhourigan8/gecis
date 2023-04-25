@@ -11,6 +11,11 @@ Our PennCube project consists of an app and a solver.
 - `pennCube/pennCube.py`: MIP solver code exported from Jupyter notebook.
 - `pennCube/pennCubeSat.py`: SAT solver code exported from Jupyter notebook.
 
+## Usage
+TODO: talk about manual testing in jupyter notebooks
+To run the web app, run `node app` in the `app` directory and `flask run` in the `pennCube` directory.
+The app will then be live at `http://localhost:8000`.
+
 ## App
 Our app shows a realistic 3D-rendered Rubik's cube which can be controlled via the mouse.
 At any point the user can click the `solve` button to have our solver solve the cube.
