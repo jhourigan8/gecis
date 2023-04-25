@@ -20,7 +20,7 @@ For each value of N we took 5 samples and calculated the empirical average time 
 
 # Conclusions
 The data shows that our SAT solver is significantly faster on smaller instances but loses its advantage as the solution size grows.
-There are a number of reasons which might cause this trend.
+There are a number of possible causes:
 - First, our MIP solver may have greater overhead than our SAT solver due to the greater general complexity of MIP problems.
 This would cause our MIP solver to be much slower on simple instances but have less of an effect on large instances.
 - Second, our MIP solver may perform better than SAT on large instances due to the greater number of variables in our SAT formulae.

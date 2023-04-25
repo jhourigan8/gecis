@@ -2,6 +2,8 @@
 Our PennCube project consists of an app and a solver.
 
 ## Files
+- `license.txt`: MIT license.
+- `RESULTS.md`: Experimental testing results.
 - `app/index.html`: HTML code for the web app.
 - `app/style.css`: CSS code for the web app.
 - `app/script.js`: Client side JS code for the web app.
@@ -12,9 +14,9 @@ Our PennCube project consists of an app and a solver.
 - `pennCube/pennCubeSat.py`: SAT solver code exported from Jupyter notebook.
 
 ## Usage
-TODO: talk about manual testing in jupyter notebooks
 To run the web app, run `node app` in the `app` directory and `flask run` in the `pennCube` directory.
 The app will then be live at `http://localhost:8000`.
+At the bottom of each Jupyter notebook we have manual test suites for testing outside of the web app.
 
 ## App
 Our app shows a realistic 3D-rendered Rubik's cube which can be controlled via the mouse.
@@ -23,7 +25,7 @@ The user can select either the `MIP` or `SAT` solver using the buttons on the bo
 While the solver is running a timer shows the amount of time elapsed.
 Once an optimal solution has been found the app animates the solution on the cube.
 
-The original Rubik's cube animation code was sourced from [https://codepen.io/jhourigan8/pen/LYgpLzj].
+The original Rubik's cube animation code was sourced from [here](https://codepen.io/jhourigan8/pen/LYgpLzj).
 The rest of the frontend is original work.
 Most of the work on the frontend dealt with keeping track of the cube state as the user moves the cube.
 To communicate with the solver our app sends a request to a flask server.
