@@ -71,7 +71,7 @@ We also tried using different objectives in MIP, like just solving one face, or 
 **Change Encodings:**
 We decided to change encodings from MIP to SAT. We thought this might speed things up since the MIP solver might be looking at unecessesary search spaces while SAT might be able to ignore some cases. Some experimental results and conclusions are listed in `RESULTS.md`.
 
-**At Most/Least One Square Constraint**
+**At Most/Least One Square Constraint:**
 Our SAT problem was fully determined without constraints mandating that each square have exactly one color at each time.
 This is because the squares at each timestep were determined exactly from the last timestep and move choice.
 To further optimize the SAT solver we introduced AMO and ALO color constraints.
