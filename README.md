@@ -38,13 +38,13 @@ We decided to implement a solver using both MIP and SAT to experimentally compar
 As a starting point for our solvers we read the following [paper](http://www.m-hikari.com/imf-password2009/45-48-2009/aksopIMF45-48-2009-2.pdf). That described a method to implement a solver using Integer Programing. The main ideas are that we have variables that define the color of each sub cube in
 each step in the soltuion, aswell a varaiables that define which move is done at each step in the solution. Then we have contraints making sure the colors match depending on the moves done, and that only move can be done at each time. Initially we had a minimization contraint over the number of moves made, however we found it to be faster to have a max move number, and re run the solver incrementing that.
 
-#### MIP Solver
-The main file to open for testing the MIP solver is the `pennCube.ipynb`. If opening run the first 4 code cells, 
-which are the imports, two solver sections, and testing helpers. The next secton contain actual test cases which you can run to test the features of our solver. Replace the input array of the first test case with any failing test case to see the output of the solver. Further more our solver has 5 different parameters. 
+The main file to open for testing the MIP solver is the `pennCube.ipynb`. 
+The file for testing the SAT solver is `pennCubeSat.ipynb` which is a fork of the pennCube notebook.
+If opening run the first 4 code cells, which are the imports, two solver sections, and testing helpers. The next secton contain actual test cases which you can run to test the features of our solver. Replace the input array of the first test case with any failing test case to see the output of the solver. Further more our solver has 5 different parameters. 
 - Scramble: The starting position of the solver
-- debugIn: When true prints runtimes and other information
-- oneSideIn: Number from 1-6 that says which one side to solve. If none solves normally
-- crossIn: Number from 1-6 that says which cross to solver. If non solves normally
+- debugIn: When true prints runtimes and other information (only supported for MIP)
+- oneSideIn: Number from 1-6 that says which one side to solve. If none solves normally (only supported for MIP)
+- crossIn: Number from 1-6 that says which cross to solver. If non solves normally (only supported for MIP)
 - timeLimit: Time limit for the solver
 
 Bellow all of this was an all in one tester that allows you to take a real-life scramble and input it to be solved. This was helpful for debugging however 
@@ -60,16 +60,20 @@ user to easily interface with it, without knowing how it works.
 Through the proccess of developing the solver we did some steps to try to make it faster, since intitialy it took an unresonable amount of time even on easy solves.
 
 **Switched Solvers:**
-The first thing we did was swap from the `Solver.CBC_MIXED_INTEGER_PROGRAMMING` to the `Solver.SAT_INTEGER_PROGRAMMING`. This new solver requires only bool vars and finite bools vars which matches our situation. This led to speed up from 10's of miniutes to 10's of seconds. We think this is due to the fact that the more complex MIP solver is looking at a much larger search space compared to the SAT version.
+In MIP, he first thing we did was swap from the `Solver.CBC_MIXED_INTEGER_PROGRAMMING` to the `Solver.SAT_INTEGER_PROGRAMMING`. This new solver requires only bool vars and finite bools vars which matches our situation. This led to speed up from 10's of miniutes to 10's of seconds. We think this is due to the fact that the more complex MIP solver is looking at a much larger search space compared to the SAT version.
 
 **Removed Minimization Contraint:**
-One thing we needed was a maxMove contraint on the solver to give a finite number of varaibles to create before calling the solve method. We initially set this to a large number and then just let it run to minimize the number of moves. However we found that it creates a large number of unesseasry varaibales so intead we got rid of the minimization constraint. Then we incremented over the maxMoves values 1, 2, ... until it finds a fesible solution. This decreased runtimes from around 16.0 seconds for a 7 move solve to 1.8 seconds for a 7 move solve. 
+One thing we needed in MIP was a maxMove contraint on the solver to give a finite number of varaibles to create before calling the solve method. We initially set this to a large number and then just let it run to minimize the number of moves. However we found that it creates a large number of unesseasry varaibales so intead we got rid of the minimization constraint. Then we incremented over the maxMoves values 1, 2, ... until it finds a fesible solution. This decreased runtimes from around 16.0 seconds for a 7 move solve to 1.8 seconds for a 7 move solve. 
 
 **Different Objectives:**
-We also tried using different objectives, like just solving one face, or solving the cross on one side. This lead to some speed up in some cases however the main time contraint was due to the actuall minimization value. Since solving one side can take >12 moves this does not lead to much speed up in complex scrambles.
+We also tried using different objectives in MIP, like just solving one face, or solving the cross on one side. This lead to some speed up in some cases however the main time contraint was due to the actual minimization value. Since solving one side can take >12 moves this does not lead to much speed up in complex scrambles.
 
 **Change Encodings:**
-Lastly we decided to change encodings from MIP to SAT. We thought this might speed things up since the MIP solver might be looking at unessesary search spaces while SAT might be able to ignore some cases. This lead to not much of a different ###(Jack write what it did)
+We decided to change encodings from MIP to SAT. We thought this might speed things up since the MIP solver might be looking at unecessesary search spaces while SAT might be able to ignore some cases. Some experimental results and conclusions are listed in `RESULTS.md`.
 
-
+**At Most/Least One Square Constraint**
+Our SAT problem was fully determined without constraints mandating that each square have exactly one color at each time.
+This is because the squares at each timestep were determined exactly from the last timestep and move choice.
+To further optimize the SAT solver we introduced AMO and ALO color constraints.
+This helped guide the solver's search and led to a ~2x decrease in runtimes on more complex instances.
 
